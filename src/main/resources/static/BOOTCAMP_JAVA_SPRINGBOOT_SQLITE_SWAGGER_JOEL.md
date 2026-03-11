@@ -232,7 +232,7 @@ Reglas de negocio para hacerlo interesante:
 
 Operaciones mínimas:
 - `save(...)`, `findById(...)`, `findAll(...)`, `deleteById(...)`
-- y métodos específicos: “find active loans”, “find by member”, “find by book”.
+- y métodos específicos: “find active loans”, “find by member”, “find by bookEntity”.
 
 ## 3.3 — Adaptadores infraestructura
 - `JpaBookRepositoryAdapter` (BookEntity ⇄ Book)
@@ -370,7 +370,7 @@ Crear `@RestControllerAdvice`:
 - [ ] `POST /api/members` crea un socio.
 - [ ] `POST /api/categories` crea una categoría.
 - [ ] Asignar categorías a un libro (vía Many-to-Many, en creación o actualización).
-- [ ] `POST /api/loans` crea un préstamo (con FK a book + member).
+- [ ] `POST /api/loans` crea un préstamo (con FK a bookEntity + member).
 - [ ] `POST /api/loans/{id}/return` marca la devolución.
 - [ ] `GET /api/loans?active=true` lista solo préstamos activos.
 - [ ] Swagger UI muestra todos los endpoints y los DTOs (sin bucles).

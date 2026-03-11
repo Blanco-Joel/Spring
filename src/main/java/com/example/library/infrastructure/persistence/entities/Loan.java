@@ -1,4 +1,4 @@
-package com.example.library.infrastructure;
+package com.example.library.infrastructure.persistence.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
