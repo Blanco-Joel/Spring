@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:
       - main  # Cambia según tu rama principal
-      - types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened]
 
 jobs:
   build-and-test:
