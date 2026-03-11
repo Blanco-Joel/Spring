@@ -1,4 +1,4 @@
-package com.example.library.application;
+package com.example.library.application.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookMap {
+public class BookRequest {
     private String isbn;
     private String title;
     private String publishedYear;
