@@ -76,6 +76,7 @@ public class BookController {
     public List<Optional<BookEntity>> getBooksByAuthor(@RequestParam(required = false) String author,
                                                        @RequestParam(required = false) String title,
                                                        @RequestParam(required = false) String isbn) {
-        return bookService.findByFilter(author); //WIP
+        return bookService.findByFilter(author);
+        //WIP
     }
 }
