@@ -29,6 +29,8 @@ public class BookController {
                         .title(bookResponse.getTitle())
                         .author(bookResponse.getAuthor())
                         .publishedYear(bookResponse.getPublishedYear())
+                        .bookCategories(bookResponse.getBookCategories())
+                        .loans(bookResponse.getLoans())
                         .build()).toList();
 
         return new ResponseEntity<>(mappedList, HttpStatus.OK);
@@ -75,8 +77,8 @@ public class BookController {
     @GetMapping("/byFilter")
     public List<Optional<BookEntity>> getBooksByAuthor(@RequestParam(required = false) String author,
                                                        @RequestParam(required = false) String title,
-                                                       @RequestParam(required = false) String isbn) {
-        return bookService.findByFilter(author);
+                                                       @RequestParam(required = false) String year) {
+        return bookService.findByFilter(author,title,year);
         //WIP
     }
 }

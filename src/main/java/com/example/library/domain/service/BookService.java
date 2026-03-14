@@ -1,14 +1,12 @@
 package com.example.library.domain.service;
 
 import com.example.library.application.model.BookRequest;
-import com.example.library.application.model.BookResponse;
+import com.example.library.domain.utils.mappers.BookMapper;
 import com.example.library.domain.model.Book;
 import com.example.library.infrastructure.persistence.entities.BookEntity;
 import com.example.library.infrastructure.persistence.repository.BookRepository;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -19,17 +17,12 @@ public class BookService {
 
     public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
-    }
 
+    }
     public List<Book> findAll() {
         List<BookEntity> response = bookRepository.findAll();
         return response.stream()
-                .map(book -> Book.builder()
-                        .isbn(book.getIsbn())
-                        .title(book.getTitle())
-                        .author(book.getAuthor())
-                        .publishedYear(book.getPublishedYear())
-                        .build())
+                .map(BookMapper::toDomain)
                 .toList();
     }
     public void createBook(BookRequest data)
@@ -69,12 +62,14 @@ public class BookService {
     public void deleteById(Long id) {
         bookRepository.deleteById(id);
     }
-    public List<Optional<BookEntity>> findByFilter(String author) {
-        List<Optional<BookEntity>> books = bookRepository.findByAuthor(author);
+    public List<Optional<BookEntity>> findByFilter(String author,String title,String year) {
+
+        List<Optional<BookEntity>> books = bookRepository.findByFilter(author, title, year);
         if (books.isEmpty())
         {
             return null;
         }
+
         List<Book> response = books.stream()
                 .map(book -> Book.builder()
                         .isbn(book.get().getIsbn())

@@ -4,17 +4,23 @@ package com.example.library.infrastructure.persistence.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+import java.util.Set;
+
 @Entity
 @Data
 @AllArgsConstructor
 @Table( name = "category")
+@NoArgsConstructor
 
-public class Category {
+public class CategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
 
-    private final int id;
-    private final String name;
+    private Long categoryId;
+    private String name;
 
+    @ManyToMany(mappedBy = "bookCategories")
+    private Set<BookEntity> books;
 }

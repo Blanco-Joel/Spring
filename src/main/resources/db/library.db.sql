@@ -1,11 +1,11 @@
 BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS "book" (
-	"id"	INTEGER NOT NULL UNIQUE,
+	"book_id"	INTEGER NOT NULL UNIQUE,
 	"isbn"	TEXT NOT NULL UNIQUE,
 	"title"	TEXT NOT NULL,
 	"published_year"	TEXT,
 	"author"	TEXT,
-	PRIMARY KEY("id")
+	PRIMARY KEY("book_id")
 );
 CREATE TABLE IF NOT EXISTS "book_categories" (
 	"id"	INTEGER NOT NULL,
@@ -16,26 +16,26 @@ CREATE TABLE IF NOT EXISTS "book_categories" (
 	CONSTRAINT "FK_Category" FOREIGN KEY("category_id") REFERENCES "category"("id")
 );
 CREATE TABLE IF NOT EXISTS "category" (
-	"id"	INTEGER NOT NULL UNIQUE,
+	"category_id"	INTEGER NOT NULL UNIQUE,
 	"name"	TEXT NOT NULL,
-	PRIMARY KEY("id")
+	PRIMARY KEY("category_id")
 );
 CREATE TABLE IF NOT EXISTS "loan" (
-	"id"	INTEGER NOT NULL UNIQUE,
+	"loan_id"	INTEGER NOT NULL UNIQUE,
 	"loan_date"	TEXT NOT NULL,
 	"due_date"	TEXT NOT NULL,
 	"return_date"	TEXT,
 	"member_id"	INTEGER,
 	"book_id"	INTEGER,
-	PRIMARY KEY("id"),
+	PRIMARY KEY("loan_id"),
 	CONSTRAINT "FK_Book" FOREIGN KEY("book_id") REFERENCES "book",
 	CONSTRAINT "FK_Member" FOREIGN KEY("member_id") REFERENCES "member"("id")
 );
 CREATE TABLE IF NOT EXISTS "member" (
-	"id"	INTEGER NOT NULL UNIQUE,
+	"member_id"	INTEGER NOT NULL UNIQUE,
 	"full_name"	TEXT NOT NULL,
 	"email"	TEXT,
-	PRIMARY KEY("id")
+	PRIMARY KEY("member_id")
 );
 INSERT INTO "book" VALUES (1,'123123123','el principito','10-10-2024','Paco');
 INSERT INTO "book_categories" VALUES (1,1,1);
