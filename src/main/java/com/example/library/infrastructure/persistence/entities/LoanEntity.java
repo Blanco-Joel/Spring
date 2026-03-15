@@ -1,11 +1,10 @@
 package com.example.library.infrastructure.persistence.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Data
@@ -22,10 +21,12 @@ public class LoanEntity {
     private String returnDate;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "member_id")
-    private MemberEntity members;
+    private MemberEntity member;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "book_id")
-    private BookEntity books;
+    private BookEntity book;
 }

@@ -1,9 +1,5 @@
 package com.example.library.application.model;
 
-import com.example.library.domain.model.Category;
-import com.example.library.domain.model.Loan;
-import com.example.library.infrastructure.persistence.entities.CategoryEntity;
-import com.example.library.infrastructure.persistence.entities.LoanEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +16,5 @@ public class BookRequest {
     private String title;
     private String publishedYear;
     private String author;
-    private List<Category> bookCategories;
-    private List<Loan> loans;
+    private List<Long> categoriesIds;
 }

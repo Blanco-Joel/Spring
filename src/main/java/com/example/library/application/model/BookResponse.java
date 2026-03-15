@@ -2,8 +2,6 @@ package com.example.library.application.model;
 
 import com.example.library.domain.model.Category;
 import com.example.library.domain.model.Loan;
-import com.example.library.infrastructure.persistence.entities.CategoryEntity;
-import com.example.library.infrastructure.persistence.entities.LoanEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

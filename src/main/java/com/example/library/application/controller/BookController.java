@@ -2,16 +2,15 @@ package com.example.library.application.controller;
 
 import com.example.library.application.model.BookRequest;
 import com.example.library.application.model.BookResponse;
+import com.example.library.application.model.exceptions.BookNotFound;
 import com.example.library.domain.model.Book;
 import com.example.library.domain.service.BookService;
-import com.example.library.infrastructure.persistence.entities.BookEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,47 +37,62 @@ public class BookController {
 
     @PostMapping("/create")
     public ResponseEntity<BookResponse> createBook(@RequestBody BookRequest request) {
-        bookService.createBook(request);
-        return ResponseEntity.ok(new BookResponse().builder()
-                .isbn(request.getIsbn())
-                .title(request.getTitle())
-                .author(request.getAuthor())
-                .publishedYear(request.getPublishedYear())
-                .build());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<BookResponse> getBookById(@PathVariable("id") Long id) throws RuntimeException {
-        Book response = bookService.findById(id);
-        BookResponse mappedResponse = new BookResponse().builder().isbn(response.getIsbn())
+        Book response = bookService.createBook(request);
+        return ResponseEntity.ok(BookResponse.builder()
+                .isbn(response.getIsbn())
                 .title(response.getTitle())
                 .author(response.getAuthor())
                 .publishedYear(response.getPublishedYear())
+                .build());
+//TODO:añadir category con getter previo
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BookResponse> getBookById(@PathVariable("id") Long id) throws BookNotFound {
+        Book response = bookService.findById(id);
+        BookResponse mappedResponse = new BookResponse().builder()
+                .isbn(response.getIsbn())
+                .title(response.getTitle())
+                .author(response.getAuthor())
+                .publishedYear(response.getPublishedYear())
+                .bookCategories(response.getBookCategories())
+                .loans(response.getLoans())
                 .build();
         return ResponseEntity.ok(mappedResponse);
     }
 
     @PutMapping("/{id}")
     public  ResponseEntity<BookResponse> updateBook(@PathVariable("id") Long id, @RequestBody BookRequest request) {
-        bookService.updateBook(id, request);
-        return ResponseEntity.ok(new BookResponse().builder()
-                .isbn(request.getIsbn())
-                .title(request.getTitle())
-                .author(request.getAuthor())
-                .publishedYear(request.getPublishedYear())
+        Book response = bookService.updateBook(id, request);
+
+        return ResponseEntity.ok(BookResponse.builder()
+                .isbn(response.getIsbn())
+                .title(response.getTitle())
+                .author(response.getAuthor())
+                .publishedYear(response.getPublishedYear())
                 .build());
     }
 
     @DeleteMapping("/{id}")
-    public void deleteBookById(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteBookById(@PathVariable("id") Long id) {
         bookService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
     @GetMapping("/byFilter")
-    public List<Optional<BookEntity>> getBooksByAuthor(@RequestParam(required = false) String author,
-                                                       @RequestParam(required = false) String title,
-                                                       @RequestParam(required = false) String year) {
-        return bookService.findByFilter(author,title,year);
-        //WIP
+    public ResponseEntity<List<BookResponse>> getBooksByFilter(@RequestParam(required = false) String author,
+                                                               @RequestParam(required = false) String title,
+                                                               @RequestParam(required = false) String year) {
+        List<Book> request = bookService.findByFilter(author,title,year);
+        List<BookResponse> mappedList = request.stream().map(bookResponse -> BookResponse.builder()
+                .isbn(bookResponse.getIsbn())
+                .title(bookResponse.getTitle())
+                .author(bookResponse.getAuthor())
+                .publishedYear(bookResponse.getPublishedYear())
+                .bookCategories(bookResponse.getBookCategories())
+                .loans(bookResponse.getLoans())
+                .build()).toList();
+        return ResponseEntity.ok(mappedList);
     }
 }

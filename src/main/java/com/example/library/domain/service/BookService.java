@@ -1,57 +1,79 @@
 package com.example.library.domain.service;
 
 import com.example.library.application.model.BookRequest;
-import com.example.library.domain.utils.mappers.BookMapper;
+import com.example.library.application.model.exceptions.BookNotFound;
+import com.example.library.application.model.exceptions.LibraryException;
 import com.example.library.domain.model.Book;
+import com.example.library.domain.utils.mappers.BookMapper;
 import com.example.library.infrastructure.persistence.entities.BookEntity;
 import com.example.library.infrastructure.persistence.repository.BookRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+@RequiredArgsConstructor
 @Service
 public class BookService {
     private final BookRepository bookRepository;
 
-    public BookService(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-
-    }
     public List<Book> findAll() {
-        List<BookEntity> response = bookRepository.findAll();
-        return response.stream()
-                .map(BookMapper::toDomain)
-                .toList();
-    }
-    public void createBook(BookRequest data)
-    {
-        BookEntity bookEntityData = new BookEntity(data);
-        bookRepository.save(bookEntityData);
-    }
-    public Book findById(Long id) throws RuntimeException {
-        Optional<BookEntity> bookEntity = bookRepository.findById(id);
-        if (!bookEntity.isPresent()) {
-            throw new RuntimeException("Book not found");
-        }
+        try
+        {
+            List<BookEntity> response = bookRepository.findAll();
+            return response.stream()
+                    .map(BookMapper::toDomain)
+                    .toList();
 
-        return bookEntity.map(book -> Book.builder()
-                        .isbn(book.getIsbn())
-                        .title(book.getTitle())
-                        .author(book.getAuthor())
-                        .publishedYear(book.getPublishedYear())
-                        .build()).get();
+        }catch (Exception ex)
+        {
+            throw new LibraryException(ex.getMessage());
+        }
     }
-    public void updateBook(Long id, BookRequest data)
+    public Book createBook(BookRequest data)
     {
-        BookEntity bookEntity = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found"));
-        updateIfNotBlank(data.getIsbn(), bookEntity::setIsbn);
-        updateIfNotBlank(data.getTitle(), bookEntity::setTitle);
-        updateIfNotBlank(data.getAuthor(), bookEntity::setAuthor);
-        updateIfNotBlank(data.getPublishedYear(), bookEntity::setPublishedYear);
-        bookRepository.save(bookEntity);
+        try{
+            BookEntity bookEntityData = new BookEntity(data);
+            BookEntity response = bookRepository.save(bookEntityData);
+            return BookMapper.toDomain(response);
+
+        }catch (Exception ex)
+        {
+            throw new LibraryException(ex.getMessage());
+        }
+    }
+
+    public Book findById(Long id) throws BookNotFound {
+        try{
+            Optional<BookEntity> bookEntity = bookRepository.findById(id);
+            if (bookEntity.isEmpty()) {
+                throw new BookNotFound("Book not found");
+            }
+
+            return BookMapper.toDomain(bookEntity.get());
+
+        }catch (Exception ex)
+        {
+            throw new LibraryException(ex.getMessage());
+        }
+    }
+    public Book updateBook(Long id, BookRequest data)
+    {
+        try{
+            BookEntity bookEntity = bookRepository.findById(id)
+                    .orElseThrow(() -> new BookNotFound("Book not found"));
+            updateIfNotBlank(data.getIsbn(), bookEntity::setIsbn);
+            updateIfNotBlank(data.getTitle(), bookEntity::setTitle);
+            updateIfNotBlank(data.getAuthor(), bookEntity::setAuthor);
+            updateIfNotBlank(data.getPublishedYear(), bookEntity::setPublishedYear);
+            return BookMapper.toDomain(bookRepository.save(bookEntity));
+
+        }catch (Exception ex)
+        {
+            throw new LibraryException(ex.getMessage());
+        }
     }
     public static void updateIfNotBlank(String newValue, Consumer<String> setter) {
         if (newValue != null && !newValue.isBlank()) {
@@ -60,24 +82,30 @@ public class BookService {
     }
 
     public void deleteById(Long id) {
-        bookRepository.deleteById(id);
+        try{
+            bookRepository.deleteById(id);
+    
+        }catch (Exception ex)
+        {
+            throw new LibraryException(ex.getMessage());
+        }
     }
-    public List<Optional<BookEntity>> findByFilter(String author,String title,String year) {
+    public List<Book> findByFilter(String author,String title,String year) {
+    try{
+        List<BookEntity> books = bookRepository.findByFilter(title, author,  year);
 
-        List<Optional<BookEntity>> books = bookRepository.findByFilter(author, title, year);
         if (books.isEmpty())
         {
-            return null;
+            throw new BookNotFound("Book not found with the filters entered");
         }
 
-        List<Book> response = books.stream()
-                .map(book -> Book.builder()
-                        .isbn(book.get().getIsbn())
-                        .title(book.get().getTitle())
-                        .author(book.get().getAuthor())
-                        .publishedYear(book.get().getPublishedYear())
-                        .build())
+        return books.stream()
+                .map(BookMapper::toDomain)
                 .toList();
-        return books;
+
+        } catch (Exception ex)
+        {
+            throw new LibraryException(ex.getMessage());
+        }
     }
 }

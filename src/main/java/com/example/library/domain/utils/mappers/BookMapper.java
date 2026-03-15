@@ -8,13 +8,7 @@ import com.example.library.infrastructure.persistence.entities.BookEntity;
 import com.example.library.infrastructure.persistence.entities.CategoryEntity;
 import com.example.library.infrastructure.persistence.entities.LoanEntity;
 import com.example.library.infrastructure.persistence.entities.MemberEntity;
-import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import org.mapstruct.Mapper;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public class BookMapper {
@@ -49,11 +43,10 @@ public class BookMapper {
     private static Loan toDomainLoan(LoanEntity entity) {
 
         return Loan.builder()
-                .loanId(entity.getLoanId())
                 .loanDate(entity.getLoanDate())
                 .DueDate(entity.getLoanDate())
                 .returnDate(entity.getReturnDate())
-                .members(toDomainMember(entity.getMembers()))
+                .member(toDomainMember(entity.getMember()))
                 .build();
     }
     private static Member toDomainMember(MemberEntity entity) {

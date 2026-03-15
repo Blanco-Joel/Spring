@@ -1,8 +1,12 @@
 package com.example.library.infrastructure.persistence.entities;
 
 import com.example.library.application.model.BookRequest;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -21,6 +25,7 @@ public class BookEntity {
     private String title;
     private String publishedYear;
     private String author;
+
     @ManyToMany
     @JoinTable(
             name = "book_categories",
@@ -29,7 +34,8 @@ public class BookEntity {
     )
     private List<CategoryEntity> bookCategories;
 
-    @OneToMany(mappedBy = "books")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "book")
     private List<LoanEntity> loans;
 
     public BookEntity(BookRequest bookRequest) {
