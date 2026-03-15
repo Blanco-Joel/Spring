@@ -16,7 +16,7 @@ import java.util.List;
 public class MemberEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long memberId;
+    private Long id;
     private String fullName;
     private String email;
 

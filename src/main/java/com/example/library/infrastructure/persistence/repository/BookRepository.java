@@ -23,6 +23,6 @@ public interface BookRepository extends JpaRepository<BookEntity,Long > {
     List<BookEntity> findAll();
 
     @Override
-    @Query("SELECT DISTINCT b FROM BookEntity b JOIN FETCH b.bookCategories bc WHERE b.book_id = :id")
+    @Query("SELECT DISTINCT b FROM BookEntity b JOIN FETCH b.bookCategories bc WHERE b.id = :id")
     Optional<BookEntity> findById(Long id);
 }

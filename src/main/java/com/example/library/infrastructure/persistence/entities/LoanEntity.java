@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class LoanEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long loanId;
+    private Long id;
     private String loanDate;
     private String DueDate;
     private String returnDate;

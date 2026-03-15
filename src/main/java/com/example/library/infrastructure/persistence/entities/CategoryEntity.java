@@ -20,7 +20,7 @@ public class CategoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
 
-    private Long categoryId;
+    private Long id;
     private String name;
 
     @JsonBackReference

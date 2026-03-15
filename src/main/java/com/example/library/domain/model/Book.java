@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class Book {
-    private Long bookId;
+    private Long id;
     private String isbn;
     private String title;
     private String publishedYear;

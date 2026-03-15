@@ -20,7 +20,7 @@ public class BookEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long bookId;
+    private Long id;
     private String isbn;
     private String title;
     private String publishedYear;

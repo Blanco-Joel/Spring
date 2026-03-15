@@ -44,7 +44,7 @@ public class BookMapper {
 
         return Loan.builder()
                 .loanDate(entity.getLoanDate())
-                .DueDate(entity.getLoanDate())
+                .DueDate(entity.getDueDate())
                 .returnDate(entity.getReturnDate())
                 .member(toDomainMember(entity.getMember()))
                 .build();
