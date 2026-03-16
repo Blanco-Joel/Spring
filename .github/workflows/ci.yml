@@ -45,8 +45,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           mvn sonar:sonar \
-            -Dsonar.projectKey=library_joel \
-            -Dsonar.organization=joel \
+            -Dsonar.projectKey=joel_library \
+            -Dsonar.organization=joel-blanco \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=$SONAR_TOKEN \
             -Dsonar.java.coveragePlugin=jacoco \
