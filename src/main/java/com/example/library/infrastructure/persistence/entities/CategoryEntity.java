@@ -1,20 +1,19 @@
 package com.example.library.infrastructure.persistence.entities;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString(exclude = "book")
 @AllArgsConstructor
 @Table( name = "category")
 @NoArgsConstructor
-
 public class CategoryEntity {
 
     @Id
@@ -23,7 +22,7 @@ public class CategoryEntity {
     private Long id;
     private String name;
 
-    @JsonBackReference
+    @JsonIgnore
     @ManyToMany(mappedBy = "bookCategories")
     private List<BookEntity> book;
 }

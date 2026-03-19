@@ -8,52 +8,79 @@ import com.example.library.infrastructure.persistence.entities.BookEntity;
 import com.example.library.infrastructure.persistence.entities.CategoryEntity;
 import com.example.library.infrastructure.persistence.entities.LoanEntity;
 import com.example.library.infrastructure.persistence.entities.MemberEntity;
+import lombok.Data;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
-@Mapper(componentModel = "spring")
-public class BookMapper {
+import java.util.List;
 
-    public static Book toDomain(BookEntity entity) {
+@Mapper(
+        componentModel = "spring",
+        uses = {CategoryMapper.class, LoanMapper.class}
+)
+public interface BookMapper {
 
-        return Book.builder()
-                .isbn(entity.getIsbn())
-                .title(entity.getTitle())
-                .author(entity.getAuthor())
-                .publishedYear(entity.getPublishedYear())
-                .bookCategories(
-                        entity.getBookCategories()
-                                .stream()
-                                .map(BookMapper::toDomainCategory)
-                                .toList()
-                ).loans(
-                        entity.getLoans()
-                                .stream()
-                                .map(BookMapper::toDomainLoan)
-                                .toList()
-                )
-                .build();
-    }
+    @Mapping(target = "loans", qualifiedByName = "withoutMembersLoanList")
+    Book toDomain(BookEntity entity);
 
-    private static Category toDomainCategory(CategoryEntity entity) {
-
-        return Category.builder()
-                .name(entity.getName())
-                .build();
-    }
-    private static Loan toDomainLoan(LoanEntity entity) {
-
-        return Loan.builder()
-                .loanDate(entity.getLoanDate())
-                .DueDate(entity.getDueDate())
-                .returnDate(entity.getReturnDate())
-                .member(toDomainMember(entity.getMember()))
-                .build();
-    }
-    private static Member toDomainMember(MemberEntity entity) {
-
-        return Member.builder()
-                .fullName(entity.getFullName())
-                .email(entity.getEmail())
-                .build();
-    }
+    @Mapping(target = "loans", qualifiedByName = "withoutMembersLoanList")
+    List<Book> toDomainList(List<BookEntity> entities);
 }
+//    public static Book toDomain(BookEntity entity) {
+//
+//        return Book.builder()
+//                .isbn(entity.getIsbn())
+//                .title(entity.getTitle())
+//                .author(entity.getAuthor())
+//                .publishedYear(entity.getPublishedYear())
+//                .bookCategories(
+//                        entity.getBookCategories()
+//                                .stream()
+//                                .map(BookMapper::toDomainCategory)
+//                                .toList()
+//                ).loans(
+//                        entity.getLoans()
+//                                .stream()
+//                                .map(BookMapper::toDomainLoan)
+//                                .toList()
+//                )
+//                .build();
+//    }
+//    public static Book toDomainWithoutLoan(BookEntity entity) {
+//
+//        return Book.builder()
+//                .isbn(entity.getIsbn())
+//                .title(entity.getTitle())
+//                .author(entity.getAuthor())
+//                .publishedYear(entity.getPublishedYear())
+//                .bookCategories(
+//                        entity.getBookCategories()
+//                                .stream()
+//                                .map(BookMapper::toDomainCategory)
+//                                .toList()
+//                )
+//                .build();
+//    }
+//    private static Category toDomainCategory(CategoryEntity entity) {
+//
+//        return Category.builder()
+//                .name(entity.getName())
+//                .build();
+//    }
+//    private static Loan toDomainLoan(LoanEntity entity) {
+//
+//        return Loan.builder()
+//                .loanDate(entity.getLoanDate())
+//                .DueDate(entity.getDueDate())
+//                .returnDate(entity.getReturnDate())
+//                .member(toDomainMember(entity.getMember()))
+//                .build();
+//    }
+//    private static Member toDomainMember(MemberEntity entity) {
+//
+//        return Member.builder()
+//                .fullName(entity.getFullName())
+//                .email(entity.getEmail())
+//                .build();
+//    }

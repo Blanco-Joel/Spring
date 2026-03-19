@@ -1,31 +1,36 @@
 package com.example.library.domain.service;
 
-import com.example.library.application.model.BookRequest;
+import com.example.library.application.model.book.BookRequest;
 import com.example.library.application.model.exceptions.BookNotFound;
+import com.example.library.application.model.exceptions.CategoryNotFound;
 import com.example.library.application.model.exceptions.LibraryException;
 import com.example.library.domain.model.Book;
 import com.example.library.domain.utils.mappers.BookMapper;
 import com.example.library.infrastructure.persistence.entities.BookEntity;
+import com.example.library.infrastructure.persistence.entities.CategoryEntity;
 import com.example.library.infrastructure.persistence.repository.BookRepository;
+import com.example.library.infrastructure.persistence.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class BookService {
     private final BookRepository bookRepository;
+    private final CategoryRepository categoryRepository;
+    private final BookMapper bookMapper;
 
     public List<Book> findAll() {
         try
         {
             List<BookEntity> response = bookRepository.findAll();
-            return response.stream()
-                    .map(BookMapper::toDomain)
-                    .toList();
+            return bookMapper.toDomainList(response);
 
         }catch (Exception ex)
         {
@@ -35,9 +40,28 @@ public class BookService {
     public Book createBook(BookRequest data)
     {
         try{
+            List<CategoryEntity>  categories = categoryRepository.findAllById(data.getCategoriesIds());
+            List<Long> categoryIds = categories.stream()
+                    .map(CategoryEntity::getId)
+                    .toList();
+            if (categories.isEmpty())
+            {
+                throw new CategoryNotFound("None of the entered categories exist");
+            }
+            List<Long> diff = new ArrayList<>(data.getCategoriesIds());
+            diff.removeAll(categoryIds);
+            if (!diff.isEmpty())
+            {
+                throw new CategoryNotFound(    "The categories: " + diff.stream()
+                        .map(String::valueOf)
+                        .collect(Collectors.joining(", "))
+                        + " do not exist");
+            }
+            data.setCategoriesIds(null);
             BookEntity bookEntityData = new BookEntity(data);
-            BookEntity response = bookRepository.save(bookEntityData);
-            return BookMapper.toDomain(response);
+            bookEntityData.setBookCategories(categories);
+
+            return bookMapper.toDomain(bookRepository.save(bookEntityData));
 
         }catch (Exception ex)
         {
@@ -52,7 +76,7 @@ public class BookService {
                 throw new BookNotFound("Book not found");
             }
 
-            return BookMapper.toDomain(bookEntity.get());
+            return bookMapper.toDomain(bookEntity.get());
 
         }catch (Exception ex)
         {
@@ -68,7 +92,8 @@ public class BookService {
             updateIfNotBlank(data.getTitle(), bookEntity::setTitle);
             updateIfNotBlank(data.getAuthor(), bookEntity::setAuthor);
             updateIfNotBlank(data.getPublishedYear(), bookEntity::setPublishedYear);
-            return BookMapper.toDomain(bookRepository.save(bookEntity));
+
+            return bookMapper.toDomain(bookRepository.save(bookEntity));
 
         }catch (Exception ex)
         {
@@ -99,9 +124,7 @@ public class BookService {
             throw new BookNotFound("Book not found with the filters entered");
         }
 
-        return books.stream()
-                .map(BookMapper::toDomain)
-                .toList();
+        return bookMapper.toDomainList(books);
 
         } catch (Exception ex)
         {

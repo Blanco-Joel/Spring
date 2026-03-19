@@ -1,5 +1,7 @@
 package com.example.library.infrastructure.persistence.entities;
 
+import com.example.library.application.model.book.BookRequest;
+import com.example.library.application.model.member.MemberRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,4 +24,9 @@ public class MemberEntity {
 
     @OneToMany(mappedBy = "member")
     private List<LoanEntity> loans;
+    public MemberEntity(MemberRequest memberRequest) {
+        this.email = memberRequest.getEmail();
+        this.fullName = memberRequest.getFullName();
+
+    }
 }

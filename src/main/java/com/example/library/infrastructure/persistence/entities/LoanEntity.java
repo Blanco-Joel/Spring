@@ -17,7 +17,7 @@ public class LoanEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String loanDate;
-    private String DueDate;
+    private String dueDate;
     private String returnDate;
 
     @ManyToOne

@@ -1,7 +1,8 @@
-package com.example.library.application.model;
+package com.example.library.application.model.loan;
 
 import com.example.library.domain.model.Category;
 import com.example.library.domain.model.Loan;
+import com.example.library.domain.model.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,11 +14,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookResponse {
-    private String isbn;
-    private String title;
-    private String publishedYear;
-    private String author;
-    private List<Category> bookCategories;
-    private List<Loan> loans;
+public class LoanResponse {
+    private String loanDate;
+    private String DueDate;
+    private String returnDate;
+    private Member member;
 }

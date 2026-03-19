@@ -1,4 +1,4 @@
-package com.example.library.domain.model;
+package com.example.library.application.model.member;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,12 +7,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class Member {
+public class MemberRequest {
     private String fullName;
     private String email;
-    private List<Loan> loans;
 }

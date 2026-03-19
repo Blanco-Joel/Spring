@@ -1,6 +1,6 @@
 package com.example.library.infrastructure.persistence.entities;
 
-import com.example.library.application.model.BookRequest;
+import com.example.library.application.model.book.BookRequest;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
