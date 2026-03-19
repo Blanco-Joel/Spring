@@ -35,4 +35,35 @@ TUTORIAL DE NEXT STEPS:
     usar en un poryecto real. Ahora, si te suena guay, pero no hace falta que las implementes.
 
 
-**PDTE -> Security, Testing, DocSwagger, JavaDoc**
+**PDTE -> Testing, DocSwagger**
+
+## Demo de seguridad Bearer con JWT simple
+
+La API ahora expone un endpoint publico para generar tokens de prueba y exige `Authorization: Bearer <token>` en el resto de endpoints.
+
+### 1. Generar token de demo
+
+```bash
+curl -X POST http://localhost:8080/auth/token \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "junior.dev",
+    "password": "Password123!"
+  }'
+```
+
+Usuarios de demo cargados en el repositorio fake:
+
+- `junior.dev` / `Password123!`
+- `admin.demo` / `Admin123!`
+
+### 2. Llamar a la API con Bearer
+
+```bash
+curl http://localhost:8080/books/all?page=0&limit=10 \
+  -H "Authorization: Bearer TU_TOKEN"
+```
+
+### 3. Swagger
+
+En Swagger UI puedes usar el boton `Authorize` con el valor del JWT generado desde `/auth/token`.

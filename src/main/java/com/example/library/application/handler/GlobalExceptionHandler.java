@@ -3,6 +3,7 @@ package com.example.library.application.handler;
 import com.example.library.application.model.ErrorResponse;
 import com.example.library.application.model.exceptions.BookNotFound;
 import com.example.library.application.model.exceptions.CategoryNotFound;
+import com.example.library.application.model.exceptions.InvalidCredentialsException;
 import com.example.library.application.model.exceptions.LibraryException;
 import com.example.library.application.model.exceptions.MemberNotFound;
 import jakarta.servlet.http.HttpServletRequest;
@@ -65,6 +66,32 @@ public class GlobalExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidCredentials(
+            InvalidCredentialsException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse error = ErrorResponse.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.UNAUTHORIZED.value())
+                .path(request.getRequestURI())
+                .build();
+
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgument(
+            IllegalArgumentException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse error = ErrorResponse.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .path(request.getRequestURI())
+                .build();
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(

@@ -7,6 +7,7 @@ import com.example.library.application.model.exceptions.BookNotFound;
 import com.example.library.application.utils.mappers.BookResponseMappers;
 import com.example.library.domain.model.Book;
 import com.example.library.domain.service.BookService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/books")
+@SecurityRequirement(name = "bearerAuth")
 public class BookController {
 
     private final BookService bookService;

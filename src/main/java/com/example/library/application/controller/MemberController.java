@@ -8,6 +8,7 @@ import com.example.library.application.utils.mappers.MemberResponseMappers;
 import com.example.library.domain.model.Book;
 import com.example.library.domain.model.Member;
 import com.example.library.domain.service.MemberService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/member")
+@SecurityRequirement(name = "bearerAuth")
 public class MemberController {
 
     private final MemberService memberService;
