@@ -11,6 +11,9 @@ import com.example.library.infrastructure.persistence.entities.CategoryEntity;
 import com.example.library.infrastructure.persistence.repository.BookRepository;
 import com.example.library.infrastructure.persistence.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,14 +29,14 @@ public class BookService {
     private final CategoryRepository categoryRepository;
     private final BookMapper bookMapper;
 
-    public List<Book> findAll() {
-        try
-        {
-            List<BookEntity> response = bookRepository.findAll();
-            return bookMapper.toDomainList(response);
+    public Page<Book> findAll(int page, int limit) {
+        try {
+            Pageable pageable = PageRequest.of(page, limit);
+            Page<BookEntity> response = bookRepository.findAll(pageable);
 
-        }catch (Exception ex)
-        {
+            return response.map(bookMapper::toDomain);
+
+        } catch (Exception ex) {
             throw new LibraryException(ex.getMessage());
         }
     }

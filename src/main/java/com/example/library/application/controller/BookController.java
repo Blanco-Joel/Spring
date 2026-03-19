@@ -1,5 +1,6 @@
 package com.example.library.application.controller;
 
+import com.example.library.application.model.PagedResponse;
 import com.example.library.application.model.book.BookRequest;
 import com.example.library.application.model.book.BookResponse;
 import com.example.library.application.model.exceptions.BookNotFound;
@@ -7,10 +8,12 @@ import com.example.library.application.utils.mappers.BookResponseMappers;
 import com.example.library.domain.model.Book;
 import com.example.library.domain.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 @RestController
@@ -22,10 +25,13 @@ public class BookController {
     private final BookResponseMappers bookResponseMappers;
 
     @GetMapping("/all")
-    public ResponseEntity<List<BookResponse>> getBooks() {
-        List<Book> response = bookService.findAll();
+    public ResponseEntity<PagedResponse<BookResponse>> getBooks(@RequestParam("page") int page,
+                                                                @RequestParam("limit") int limit) {
+        Page<Book> response = bookService.findAll(page, limit);
 
-        return new ResponseEntity<>(bookResponseMappers.toResponseList(response), HttpStatus.OK);
+        Page<BookResponse> mappedResponse = response.map(bookResponseMappers::toResponse);
+
+        return ResponseEntity.ok(PagedResponse.from(mappedResponse));
     }
 
     @PostMapping("/create")
