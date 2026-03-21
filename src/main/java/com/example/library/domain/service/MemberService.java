@@ -25,32 +25,30 @@ import java.util.stream.Collectors;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
+
     public List<Member> findAll() {
-        try
-        {
+        try {
             List<MemberEntity> response = memberRepository.findAll();
             return memberMapper.toDomainList(response);
 
-        }catch (Exception ex)
-        {
+        } catch (Exception ex) {
             throw new LibraryException(ex.getMessage());
         }
     }
-    public Member createMember(MemberRequest data)
-    {
-        try{
+
+    public Member createMember(MemberRequest data) {
+        try {
             MemberEntity memberEntityData = new MemberEntity(data);
 
             return memberMapper.toDomain(memberRepository.save(memberEntityData));
 
-        }catch (Exception ex)
-        {
+        } catch (Exception ex) {
             throw new LibraryException(ex.getMessage());
         }
     }
 
     public Member findById(Long id) throws MemberNotFound {
-        try{
+        try {
             Optional<MemberEntity> memberEntity = memberRepository.findById(id);
             if (memberEntity.isEmpty()) {
                 throw new MemberNotFound("Member not found");
@@ -58,14 +56,13 @@ public class MemberService {
 
             return memberMapper.toDomain(memberEntity.get());
 
-        }catch (Exception ex)
-        {
+        } catch (Exception ex) {
             throw new LibraryException(ex.getMessage());
         }
     }
-    public Member updateMember(Long id, MemberRequest data)
-    {
-        try{
+
+    public Member updateMember(Long id, MemberRequest data) {
+        try {
             MemberEntity memberEntity = memberRepository.findById(id)
                     .orElseThrow(() -> new MemberNotFound("Member not found"));
             updateIfNotBlank(data.getEmail(), memberEntity::setEmail);
@@ -73,11 +70,11 @@ public class MemberService {
 
             return memberMapper.toDomain(memberRepository.save(memberEntity));
 
-        }catch (Exception ex)
-        {
+        } catch (Exception ex) {
             throw new LibraryException(ex.getMessage());
         }
     }
+
     public static void updateIfNotBlank(String newValue, Consumer<String> setter) {
         if (newValue != null && !newValue.isBlank()) {
             setter.accept(newValue);
@@ -85,27 +82,25 @@ public class MemberService {
     }
 
     public void deleteById(Long id) {
-        try{
+        try {
             memberRepository.deleteById(id);
-    
-        }catch (Exception ex)
-        {
+
+        } catch (Exception ex) {
             throw new LibraryException(ex.getMessage());
         }
     }
-    public List<Member> findByFilter(String email,String fullName) {
-    try{
-        List<MemberEntity> members = memberRepository.findByFilter(email, fullName);
 
-        if (members.isEmpty())
-        {
-            throw new MemberNotFound("Member not found with the filters entered");
-        }
+    public List<Member> findByFilter(String email, String fullName) {
+        try {
+            List<MemberEntity> members = memberRepository.findByFilter(email, fullName);
 
-        return memberMapper.toDomainList(members);
+            if (members.isEmpty()) {
+                throw new MemberNotFound("Member not found with the filters entered");
+            }
 
-        } catch (Exception ex)
-        {
+            return memberMapper.toDomainList(members);
+
+        } catch (Exception ex) {
             throw new LibraryException(ex.getMessage());
         }
     }
