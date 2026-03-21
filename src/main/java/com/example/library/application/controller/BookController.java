@@ -7,6 +7,9 @@ import com.example.library.application.model.exceptions.BookNotFound;
 import com.example.library.application.utils.mappers.BookResponseMappers;
 import com.example.library.domain.model.Book;
 import com.example.library.domain.service.BookService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,17 +19,22 @@ import org.springframework.web.bind.annotation.*;
 
 import java.awt.print.Pageable;
 import java.util.List;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/books")
 @SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Usuarios", description = "Operaciones relacionadas con usuarios")
 public class BookController {
 
     private final BookService bookService;
     private final BookResponseMappers bookResponseMappers;
 
     @GetMapping("/all")
+    @Operation(summary = "Obtains the Book list")
+
     public ResponseEntity<PagedResponse<BookResponse>> getBooks(@RequestParam("page") int page,
                                                                 @RequestParam("limit") int limit) {
         Page<Book> response = bookService.findAll(page, limit);
@@ -37,7 +45,9 @@ public class BookController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<BookResponse> createBook(@RequestBody BookRequest request) {
+    public ResponseEntity<BookResponse> createBook(@RequestBody(description = "Books data")
+                                                   @org.springframework.web.bind.annotation.RequestBody() BookRequest request) {
+
         Book response = bookService.createBook(request);
 
         return new ResponseEntity<>(bookResponseMappers.toResponseMapperWithoutLoan(response), HttpStatus.OK);
@@ -45,7 +55,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BookResponse> getBookById(@PathVariable("id") Long id) throws BookNotFound {
+    public ResponseEntity<BookResponse> getBookById(@Parameter(description = "Book identifier") @PathVariable("id") Long id) throws BookNotFound {
         Book response = bookService.findById(id);
 
         return new ResponseEntity<>(bookResponseMappers.toResponse(response), HttpStatus.OK);
@@ -66,6 +76,9 @@ public class BookController {
     }
 
     @GetMapping("/byFilter")
+    @Operation(summary = "Obtener usuario")
+    @ApiResponse(responseCode = "200", description = "Finded book ")
+    @ApiResponse(responseCode = "404", description = "Book not exist")
     public ResponseEntity<List<BookResponse>> getBooksByFilter(@RequestParam(required = false) String author,
                                                                @RequestParam(required = false) String title,
                                                                @RequestParam(required = false) String year) {

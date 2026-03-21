@@ -14,7 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 public class LoanRequest {
     private String loanDate;
-    private String DueDate;
+    private String dueDate;
     private String returnDate;
     private Member member;
+
 }

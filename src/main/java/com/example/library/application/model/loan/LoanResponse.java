@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class LoanResponse {
     private String loanDate;
-    private String DueDate;
+    private String dueDate;
     private String returnDate;
     private Member member;
 }
