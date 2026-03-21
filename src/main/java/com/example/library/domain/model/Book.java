@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,4 +17,6 @@ public class Book {
     private String title;
     private String publishedYear;
     private String author;
+    private List<Category> bookCategories;
+    private List<Loan> loans;
 }

@@ -1,9 +1,11 @@
-package com.example.library.application.model;
+package com.example.library.application.model.book;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -14,4 +16,5 @@ public class BookRequest {
     private String title;
     private String publishedYear;
     private String author;
+    private List<Long> categoriesIds;
 }
